@@ -71,14 +71,14 @@ async function getInputsInfo(txid: string) {
           scriptSig: "",
           scriptWits:
             "024730440220419cd181f677ee7fe4be7d7f47a7acf1013ecf2a943ec6305d62b93fba7c5200022046cc904afe79767fb55d8dc32bc02d3e95a708e85e4dc273773c017def0b4ce1012102bad627e98b27cb03b79fe316cce17e89c7c51bf36636c932a4df05fc98675182",
-          sequence: 4294967295,
+          sequence: 4294967295, @sequence 0xffffffff === 4294967295 {该交易不可加速}
           heightTxo: 826462,
           utxid:
-            "c4cf1bf7564fe363f8227ebd37ec050e786039a79a8f3b55c7893b2963adf631",
-          vout: 0,
+            "c4cf1bf7564fe363f8227ebd37ec050e786039a79a8f3b55c7893b2963adf631", // @hash
+          vout: 0, // @index
           address: "bc1q4l0twnsrjgpvqq8hxg76d3v8r73vwyfye2hrpa",
           codeType: 7,
-          satoshi: 10900000,
+          satoshi: 10900000, // @fromAmount
           scriptType: "0014",
           scriptPk: "0014afdeb74e039202c000f7323da6c5871fa2c71124",
           inscriptions: [],
@@ -104,9 +104,9 @@ async function getOutputsInfo(txid: string) {
         {
           txid: "7ebe98abd6d6b8f8ca87a29720659c9fba63dccf8c63567cdebfc5c8ba47f39b",
           vout: 0,
-          address: "bc1q8jyyutlsdl75hw67n08ntg636y5j2k64smajcg",
+          address: "bc1q8jyyutlsdl75hw67n08ntg636y5j2k64smajcg", // @address
           codeType: 0,
-          satoshi: 7210667,
+          satoshi: 7210667, // @value
           scriptType: "0014",
           scriptPk: "00143c884e2ff06ffd4bbb5e9bcf35a351d129255b55",
           height: 4194303,
@@ -223,6 +223,7 @@ function parseBtc(num: number) {
 }
 
 // 计算 gas
+// TODO ========
 // @refresh https://bitcoinops.org/en/tools/calc-size/
 // function computeVbSize(inputLength: number, outPutLength: number) {
 //   const overhead = 10;
