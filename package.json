@@ -1,0 +1,32 @@
+{
+  "name": "tx-accelerate",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vue-tsc && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@types/big.js": "^6.2.2",
+    "big.js": "^6.2.1",
+    "bip32": "^4.0.0",
+    "bip39": "^3.1.0",
+    "bitcoinjs-lib": "^6.1.5",
+    "browserify": "^17.0.0",
+    "regtest-client": "^0.2.1",
+    "tiny-secp256k1": "^2.2.3",
+    "vue": "^3.3.11"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.5",
+    "@vitejs/plugin-vue": "^4.5.2",
+    "typescript": "^5.2.2",
+    "vite": "^5.0.8",
+    "vite-plugin-node-polyfills": "^0.19.0",
+    "vite-plugin-top-level-await": "^1.4.1",
+    "vite-plugin-wasm": "^3.3.0",
+    "vue-tsc": "^1.8.25"
+  }
+}
