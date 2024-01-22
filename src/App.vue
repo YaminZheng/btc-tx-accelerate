@@ -6,14 +6,15 @@ import { toXOnly } from "bitcoinjs-lib/src/psbt/bip371";
 import Big from "big.js";
 // import BIP32Factory from "bip32";
 
-const fromAmount = 0.00001;
-const toAmount = 0.000005;
-const vbPerSats = 0.00000142;
-const toAddress = "tb1q5tsjcyz7xmet07yxtumakt739y53hcttmntajq";
 const txHash =
-  "07404909d82a21d18278aa6cf92c5c5726ad95d6ac82e5f44bd24e6c23a7eaa8";
-const txIndex = 8;
-let perTxId = "4dccb5c30143e41d0152b61967d4b17cc74f4e6c19cf5e469739ee1e279618a4";
+  "4dccb5c30143e41d0152b61967d4b17cc74f4e6c19cf5e469739ee1e279618a4";
+const txIndex = 1;
+
+const fromAmount = 0.00000358;
+const toAmount = fromAmount / 2;
+// const vbPerSats = 1;
+const feeAmount = toAmount / 2;
+const toAddress = "tb1q5tsjcyz7xmet07yxtumakt739y53hcttmntajq";
 
 bitcoin.initEccLib(ecc);
 // const bip32 = BIP32Factory(ecc);
@@ -43,14 +44,13 @@ async function onClickSign() {
     //   .minus(computeTxFee(1, 2, vbPerSats))
     //   .toNumber(),
     value: parseBtc(
-      Big(fromAmount).minus(toAmount).minus(vbPerSats).toNumber()
+      Big(fromAmount).minus(toAmount).minus(feeAmount).toNumber()
     ),
   });
   const psbtHex = psbt.toHex();
   console.log(psbtHex);
   const tx = await window.unisat.signPsbt(psbt.toHex());
-  perTxId = await window.unisat.pushPsbt(tx);
-  console.log(perTxId);
+  await window.unisat.pushPsbt(tx);
 }
 
 async function onClickAccelerate() {
@@ -63,20 +63,20 @@ async function onClickAccelerate() {
   });
   const psbt = new bitcoin.Psbt({ network: bitcoin.networks.testnet });
   psbt.addInput({
-    hash: perTxId,
-    index: 1,
+    hash: txHash,
+    index: txIndex,
     witnessUtxo: { script: Buffer.from(output!), value: parseBtc(fromAmount) },
     tapInternalKey: xOnlyPublicKey,
+    sequence: 0xfffffffe,
   });
   psbt.addOutput({
     address: accounts[0],
-    value: parseBtc(Big(fromAmount).minus(0.000002).toNumber()),
+    value: parseBtc(Big(fromAmount).minus(feeAmount).toNumber()),
   });
   const psbtHex = psbt.toHex();
   console.log(psbtHex);
   const tx = await window.unisat.signPsbt(psbt.toHex());
-  perTxId = await window.unisat.pushPsbt(tx);
-  console.log(perTxId);
+  await window.unisat.pushPsbt(tx);
 }
 
 function parseBtc(num: number) {
