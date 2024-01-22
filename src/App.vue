@@ -7,13 +7,13 @@ import Big from "big.js";
 // import BIP32Factory from "bip32";
 
 const txHash =
-  "4dccb5c30143e41d0152b61967d4b17cc74f4e6c19cf5e469739ee1e279618a4";
-const txIndex = 1;
+  "c4e20639cadaf20c47747f3673248f5efbcdd23ac2b82089e8d1acb91278592f";
+const txIndex = 9;
 
-const fromAmount = 0.00000358;
-const toAmount = fromAmount / 2;
+const fromAmount = 0.00001;
+const toAmount = 0.000001;
 // const vbPerSats = 1;
-const feeAmount = toAmount / 2;
+const feeAmount = 0.00000142;
 const toAddress = "tb1q5tsjcyz7xmet07yxtumakt739y53hcttmntajq";
 
 bitcoin.initEccLib(ecc);
@@ -33,6 +33,7 @@ async function onClickSign() {
     index: txIndex,
     witnessUtxo: { script: Buffer.from(output!), value: parseBtc(fromAmount) },
     tapInternalKey: xOnlyPublicKey,
+    sequence: 0xfffffffd,
   });
   psbt.addOutput({
     address: toAddress,
@@ -67,7 +68,7 @@ async function onClickAccelerate() {
     index: txIndex,
     witnessUtxo: { script: Buffer.from(output!), value: parseBtc(fromAmount) },
     tapInternalKey: xOnlyPublicKey,
-    sequence: 0xfffffffe,
+    sequence: 0xfffffffb,
   });
   psbt.addOutput({
     address: accounts[0],
