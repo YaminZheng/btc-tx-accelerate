@@ -1,22 +1,20 @@
 <script setup lang="ts">
 import Big from "big.js";
-import { bitcoin, Buffer, toXOnly } from "~/assets/scripts/tx";
+import { bitcoin, Buffer, parseBtc } from "~/assets/scripts/tx";
+import { getAccounts, getPublicKey } from "~/assets/scripts/wallet";
 
 const txHash =
-  "c4e20639cadaf20c47747f3673248f5efbcdd23ac2b82089e8d1acb91278592f";
-const txIndex = 9;
+  "6aa3a1bc3ac03e88d674da8705e9edad66f545c90d5a179b93e22465ec397d33";
+const txIndex = 0;
 
-const fromAmount = 0.00001;
+const fromAmount = 0.00118663;
 const toAmount = 0.000001;
-// const vbPerSats = 1;
 const feeAmount = 0.00000142;
-const toAddress = "tb1q5tsjcyz7xmet07yxtumakt739y53hcttmntajq";
+const toAddress = "tb1pp7clwhg7dvzuykrc23n8fnetzmt20lv2zvd0yynr63phhzrcwwdqrsv8ex";
 
-async function onClickSign() {
-  const accounts = await window.unisat.requestAccounts();
-  const publicKey = await window.unisat.getPublicKey();
-  const publicKeyHex = Buffer.from(publicKey, "hex");
-  const xOnlyPublicKey = toXOnly(publicKeyHex);
+async function onClickSend() {
+  const accounts = await getAccounts();
+  const { xOnlyPublicKey } = await getPublicKey();
   const { output } = bitcoin.payments.p2tr({
     internalPubkey: xOnlyPublicKey,
   });
@@ -39,17 +37,14 @@ async function onClickSign() {
     ),
   });
   const psbtHex = psbt.toHex();
-  console.log(psbtHex);
-  const tx = await window.unisat.signPsbt(psbt.toHex());
-  await window.unisat.pushPsbt(tx);
-}
-
-function parseBtc(num: number) {
-  return Big(num).times(1e8).toNumber();
+  const tx = await window.unisat.signPsbt(psbtHex);
+  console.log(tx);
+  //   await window.unisat.pushPsbt(tx);
 }
 </script>
 
 <template>
-  <Transaction />
-  <Accelerate />
+  <div>
+    <button @click="onClickSend">发送交易</button>
+  </div>
 </template>
