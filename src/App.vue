@@ -1,52 +1,5 @@
 <script setup lang="ts">
-import Big from "big.js";
-import { bitcoin, Buffer, toXOnly } from "~/assets/scripts/tx";
-
-const txHash =
-  "c4e20639cadaf20c47747f3673248f5efbcdd23ac2b82089e8d1acb91278592f";
-const txIndex = 9;
-
-const fromAmount = 0.00001;
-const toAmount = 0.000001;
-// const vbPerSats = 1;
-const feeAmount = 0.00000142;
-const toAddress = "tb1q5tsjcyz7xmet07yxtumakt739y53hcttmntajq";
-
-async function onClickSign() {
-  const accounts = await window.unisat.requestAccounts();
-  const publicKey = await window.unisat.getPublicKey();
-  const publicKeyHex = Buffer.from(publicKey, "hex");
-  const xOnlyPublicKey = toXOnly(publicKeyHex);
-  const { output } = bitcoin.payments.p2tr({
-    internalPubkey: xOnlyPublicKey,
-  });
-  const psbt = new bitcoin.Psbt({ network: bitcoin.networks.testnet });
-  psbt.addInput({
-    hash: txHash,
-    index: txIndex,
-    witnessUtxo: { script: Buffer.from(output!), value: parseBtc(fromAmount) },
-    tapInternalKey: xOnlyPublicKey,
-    sequence: 0xfffffffd, // 如果 sequence < 0xffffffff 就表示可以加速
-  });
-  psbt.addOutput({
-    address: toAddress,
-    value: parseBtc(toAmount),
-  });
-  psbt.addOutput({
-    address: accounts[0],
-    value: parseBtc(
-      Big(fromAmount).minus(toAmount).minus(feeAmount).toNumber()
-    ),
-  });
-  const psbtHex = psbt.toHex();
-  console.log(psbtHex);
-  const tx = await window.unisat.signPsbt(psbt.toHex());
-  await window.unisat.pushPsbt(tx);
-}
-
-function parseBtc(num: number) {
-  return Big(num).times(1e8).toNumber();
-}
+console.log("App");
 </script>
 
 <template>
